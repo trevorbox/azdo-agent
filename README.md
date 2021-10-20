@@ -12,3 +12,11 @@ oc create secret generic azdo-agent --from-literal=AZP_TOKEN=$AZP_TOKEN --from-l
 helm upgrade -i azdo-agent helm/azdo-agent -n azdo-agent
 
 ```
+
+# local
+
+```sh
+podman build -t test .
+podman run -it --entrypoint="/bin/bash" -e AZP_TOKEN=$PAT -e AZP_URL=$URL --user 1001 test
+podman run -it -e AZP_TOKEN=$PAT -e AZP_URL=$URL --user 1001 test
+```
