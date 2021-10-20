@@ -14,7 +14,7 @@ podman push quay.io/trevorbox/azdo-agent:latest
 
 ```sh
 oc new-project azdo-agent
-oc new-build https://github.com/trevorbox/azdo-agent.git --strategy=docker --context-dir=agent/ -n azdo-agent
+oc new-build https://github.com/trevorbox/azdo-agent.git --strategy=docker --context-dir=buildah-agent/ -n azdo-agent
 ```
 
 # deploy
@@ -25,7 +25,7 @@ export AZP_URL=${URL}
 export AZP_POOL=${POOL}
 
 helm upgrade -i azdo-agent helm/azdo-agent \
-  --set image.repository=quay.io/trevorbox/azdo-agent \
+  --set image.repository=image-registry.openshift-image-registry.svc:5000/azdo-agent/azdo-agent \
   --set azpdevops.token=${AZP_TOKEN} \
   --set azpdevops.url=${AZP_URL} \
   --set azpdevops.pool=${AZP_POOL} \
