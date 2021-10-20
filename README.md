@@ -1,5 +1,7 @@
 # azdo-agent
 
+This follows the steps noted in <https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/docker?view=azure-devops> but with permissions for Openshift.
+
 ```sh
 oc new-project azdo-agent
 oc new-build https://github.com/trevorbox/azdo-agent.git --strategy=docker --context-dir=agent/ -n azdo-agent
