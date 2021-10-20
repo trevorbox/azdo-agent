@@ -84,4 +84,5 @@ affinity: {}
 azpdevops:
   url:
   token:
+  pool: 
   
