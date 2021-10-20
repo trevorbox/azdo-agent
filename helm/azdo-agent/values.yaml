@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: image-registry.openshift-image-registry.svc:5000/azdo-agent/azdo-agent
+  repository: quay.io/trevorbox/azdo-agent
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
@@ -80,3 +80,8 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+azpdevops:
+  url:
+  token:
+  
