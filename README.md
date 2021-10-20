@@ -28,7 +28,7 @@ helm upgrade -i azdo-agent helm/azdo-agent \
   --set image.repository=quay.io/trevorbox/azdo-agent \
   --set azpdevops.token=${AZP_TOKEN} \
   --set azpdevops.url=${AZP_URL} \
-  --set azpdevops.pool=${AZP_POOL}
+  --set azpdevops.pool=${AZP_POOL} \
   -n azdo-agent \
   --create-namespace
 ```
