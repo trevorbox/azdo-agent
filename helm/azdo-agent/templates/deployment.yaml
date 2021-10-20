@@ -42,19 +42,6 @@ spec:
           envFrom:
             - secretRef:
                 name: azdo-agent
-          # volumeMounts:
-          #   - name: azdo-agent-start
-          #     mountPath: /azp/start.sh
-          #     subPath: start.sh
-          #   - name: azp
-          #     mountPath: /tmp/azp
-      # volumes:
-      #   - name: azdo-agent-start
-      #     configMap:
-      #       name: azdo-agent-start
-      #       defaultMode: 0777
-      #   - name: azp
-      #     emptyDir: {}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
