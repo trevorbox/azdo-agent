@@ -43,6 +43,9 @@ helm upgrade -i azdo-agent helm/azdo-agent \
   --set image.repository=image-registry.openshift-image-registry.svc:5000/azdo-agent/azdo-agent \
   -n azdo-agent \
   --create-namespace
+
+# (optional) trigger a redeploy when the builder image changes
+oc set triggers deploy/azdo-agent --from-image=azdo-agent:latest -c azdo-agent -n azdo-agent
 ```
 
 ## test build in agent container
