@@ -39,6 +39,30 @@ spec:
               protocol: TCP
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          readinessProbe:
+            exec:
+              command:
+              - /bin/bash
+              - -c
+              - if [[ $(/bin/ps -ef | /bin/grep "/bin/AgentService.js" | /bin/grep -v grep | /usr/bin/wc -l) -ge "1" ]]; then exit 0; else echo "/bin/AgentService.js not running" && exit 1; fi
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe:
+            exec:
+              command:
+              - /bin/bash
+              - -c
+              - if [[ $(/bin/ps -ef | /bin/grep "/bin/AgentService.js" | /bin/grep -v grep | /usr/bin/wc -l) -ge "1" ]]; then exit 0; else echo "/bin/AgentService.js not running" && exit 1; fi
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          startupProbe:
+            exec:
+              command:
+              - /bin/bash
+              - -c
+              - if [[ $(/bin/ps -ef | /bin/grep "/bin/AgentService.js" | /bin/grep -v grep | /usr/bin/wc -l) -ge "1" ]]; then exit 0; else echo "/bin/AgentService.js not running" && exit 1; fi
+            initialDelaySeconds: 5
+            periodSeconds: 5
           envFrom:
             - secretRef:
                 name: azdevops

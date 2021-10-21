@@ -20,15 +20,18 @@ oc new-build https://github.com/trevorbox/azdo-agent.git --strategy=docker --con
 # deploy
 
 ```sh
-export AZP_TOKEN=
-export AZP_URL=
-export AZP_POOL=
+export AZP_TOKEN=mytoken
+export AZP_URL=https://dev.azure.com/test
+export AZP_POOL=default
+
+helm upgrade -i secrets helm/secrets \
+  --set azpdevops.url=${AZP_URL} \
+  --set azpdevops.token=${AZP_TOKEN} \
+  --set azpdevops.pool=${AZP_POOL} \
+  -n azdo-agent
 
 helm upgrade -i azdo-agent helm/azdo-agent \
   --set image.repository=image-registry.openshift-image-registry.svc:5000/azdo-agent/azdo-agent \
-  --set azpdevops.token=${AZP_TOKEN} \
-  --set azpdevops.url=${AZP_URL} \
-  --set azpdevops.pool=${AZP_POOL} \
   -n azdo-agent \
   --create-namespace
 ```

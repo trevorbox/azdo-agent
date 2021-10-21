@@ -80,9 +80,4 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
-
-azpdevops:
-  url:
-  token:
-  pool: 
   
