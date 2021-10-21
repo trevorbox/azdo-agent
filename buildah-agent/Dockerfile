@@ -17,7 +17,7 @@ RUN if [ "$TARGETARCH" = "amd64" ]; then \
     curl -LsS "$AZP_AGENTPACKAGE_URL" | tar -xz && \
     rpm --import https://packages.microsoft.com/keys/microsoft.asc && \
     bin/installdependencies.sh && \
-    dnf install -y azure-cli git && \
+    dnf install -y azure-cli git procps && \
     dnf clean all && \
     rm -rf /var/cache/dnf && \
     chown -R 1001:0 /azp &&  \
