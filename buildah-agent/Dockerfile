@@ -19,7 +19,7 @@ RUN if [ "$TARGETARCH" = "amd64" ]; then \
     bin/installdependencies.sh && \
     dnf install -y azure-cli git && \
     dnf clean all && \
-    rm -rf /var/cache/yum && \
+    rm -rf /var/cache/dnf && \
     chown -R 1001:0 /azp &&  \
     chmod -R g+rwX /azp && \
     chmod +x start.sh
