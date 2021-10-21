@@ -81,4 +81,10 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
-  
+
+# used by the /usr/bin/build.sh file to build test image
+env: 
+  - name: OUTPUT_REGISTRY
+    value: image-registry.openshift-image-registry.svc:5000/azdo-agent
+  - name: OUTPUT_IMAGE
+    value: custom-image:latest

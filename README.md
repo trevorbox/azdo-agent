@@ -30,12 +30,26 @@ helm upgrade -i secrets helm/secrets \
   --set azpdevops.pool=${AZP_POOL} \
   -n azdo-agent
 
+
+# this allows the service account to run the pod as privileged, since buildah needs root
 oc adm policy add-scc-to-user privileged -z azdo-agent -n azdo-agent
+
+oc get $(oc get secrets -n azdo-agent -o name | egrep builder-dockercfg) -n azdo-agent -o jsonpath={.data.\\.dockercfg} | base64 -d > /tmp/.dockercfg
+
+oc create secret generic push-secret --from-file=.dockercfg=/tmp/.dockercfg --type="kubernetes.io/dockercfg"
 
 helm upgrade -i azdo-agent helm/azdo-agent \
   --set image.repository=image-registry.openshift-image-registry.svc:5000/azdo-agent/azdo-agent \
   -n azdo-agent \
   --create-namespace
+```
+
+## test build in agent container
+
+This will run the the example buildah script baked into the image to test an image build from the running agent.
+
+```sh
+oc exec deploy/azdo-agent -n azdo-agent -- /usr/bin/build.sh
 ```
 
 # test local
@@ -55,7 +69,3 @@ podman build -t agent -f agent/Dockerfile
 podman run -it --entrypoint="/bin/bash" -e AZP_TOKEN=${AZP_TOKEN} -e AZP_URL=${AZP_URL} --user 1001 agent
 podman run -it -e AZP_TOKEN=${AZP_TOKEN} -e AZP_URL=${AZP_URL} --user 1001 agent
 ```
-
-export OUTPUT_REGISTRY=image-registry.openshift-image-registry.svc:5000/azdo-agent
-export OUTPUT_IMAGE=custom-image:latest
-/usr/bin/build.sh

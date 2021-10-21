@@ -1,3 +1,2 @@
 FROM registry.access.redhat.com/ubi8/ubi
-LABEL io.openshift.build.namespace=azdo-agent
 RUN touch /tmp/build

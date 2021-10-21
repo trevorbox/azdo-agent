@@ -29,10 +29,10 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
-          command:
-            - /bin/bash
-            - '-c'
-            - sleep 10000s
+          # command:
+          #   - /bin/bash
+          #   - '-c'
+          #   - sleep 10000s
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -44,7 +44,7 @@ spec:
           #     command:
           #     - /bin/bash
           #     - -c
-          #     - if [[ $(/bin/ps -ef | /bin/grep "/bin/AgentService.js" | /bin/grep -v grep | /usr/bin/wc -l) -ge "1" ]]; then exit 0; else echo "/bin/AgentService.js not running" && exit 1; fi
+          #     - if [[ $(/bin/ps -ef | /bin/grep "/azp/bin/Agent.Listener" | /bin/grep -v grep | /usr/bin/wc -l) -ge "1" ]]; then exit 0; else echo "/azp/bin/Agent.Listener not running" && exit 1; fi
           #   initialDelaySeconds: 5
           #   periodSeconds: 5
           # livenessProbe:
@@ -52,7 +52,7 @@ spec:
           #     command:
           #     - /bin/bash
           #     - -c
-          #     - if [[ $(/bin/ps -ef | /bin/grep "/bin/AgentService.js" | /bin/grep -v grep | /usr/bin/wc -l) -ge "1" ]]; then exit 0; else echo "/bin/AgentService.js not running" && exit 1; fi
+          #     - if [[ $(/bin/ps -ef | /bin/grep "/azp/bin/Agent.Listener" | /bin/grep -v grep | /usr/bin/wc -l) -ge "1" ]]; then exit 0; else echo "/azp/bin/Agent.Listener not running" && exit 1; fi
           #   initialDelaySeconds: 5
           #   periodSeconds: 5
           # startupProbe:
@@ -60,17 +60,16 @@ spec:
           #     command:
           #     - /bin/bash
           #     - -c
-          #     - if [[ $(/bin/ps -ef | /bin/grep "/bin/AgentService.js" | /bin/grep -v grep | /usr/bin/wc -l) -ge "1" ]]; then exit 0; else echo "/bin/AgentService.js not running" && exit 1; fi
+          #     - if [[ $(/bin/ps -ef | /bin/grep "/azp/bin/Agent.Listener" | /bin/grep -v grep | /usr/bin/wc -l) -ge "1" ]]; then exit 0; else echo "/azp/bin/Agent.Listener not running" && exit 1; fi
           #   initialDelaySeconds: 5
           #   periodSeconds: 5
           envFrom:
             - secretRef:
                 name: azdevops
+          {{- with .Values.env }}
           env: 
-            - name: OUTPUT_REGISTRY
-              value: image-registry.openshift-image-registry.svc:5000/azdo-agent
-            - name: OUTPUT_IMAGE
-              value: custom-image:latest
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - name: push-secret
               mountPath: /var/run/secrets/openshift.io/push
