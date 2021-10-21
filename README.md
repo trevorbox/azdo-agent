@@ -34,6 +34,7 @@ helm upgrade -i secrets helm/secrets \
 # this allows the service account to run the pod as privileged, since buildah needs root
 oc adm policy add-scc-to-user privileged -z azdo-agent -n azdo-agent
 
+# copy the builder serviceaccount's push secret which is used by the example /usr/bin/build.sh to test a build
 oc get $(oc get secrets -n azdo-agent -o name | egrep builder-dockercfg) -n azdo-agent -o jsonpath={.data.\\.dockercfg} | base64 -d > /tmp/.dockercfg
 
 oc create secret generic push-secret --from-file=.dockercfg=/tmp/.dockercfg --type="kubernetes.io/dockercfg"
