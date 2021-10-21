@@ -5,6 +5,10 @@ RUN rpm --import https://packages.microsoft.com/keys/microsoft.asc
 
 COPY azure-cli.repo /etc/yum.repos.d/azure-cli.repo
 
+COPY installdependencies.sh /tmp
+
+RUN chmod +x /tmp/installdependencies.sh && /tmp/installdependencies.sh
+
 RUN dnf install -y azure-cli \
     && dnf clean all \
     && rm -rf /var/cache/yum

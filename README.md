@@ -20,9 +20,9 @@ oc new-build https://github.com/trevorbox/azdo-agent.git --strategy=docker --con
 # deploy
 
 ```sh
-export AZP_TOKEN=${PAT}
-export AZP_URL=${URL}
-export AZP_POOL=${POOL}
+export AZP_TOKEN=
+export AZP_URL=
+export AZP_POOL=
 
 helm upgrade -i azdo-agent helm/azdo-agent \
   --set image.repository=image-registry.openshift-image-registry.svc:5000/azdo-agent/azdo-agent \
@@ -35,8 +35,18 @@ helm upgrade -i azdo-agent helm/azdo-agent \
 
 # test local
 
+buildah-agent
+
 ```sh
-podman build -t test .
-podman run -it --entrypoint="/bin/bash" -e AZP_TOKEN=$PAT -e AZP_URL=$URL --user 1001 test
-podman run -it -e AZP_TOKEN=$PAT -e AZP_URL=$URL --user 1001 test
+podman build -t buildah-agent -f buildah-agent/Dockerfile
+podman run -it --entrypoint="/bin/bash" -e AZP_TOKEN=${AZP_TOKEN} -e AZP_URL=${AZP_URL} --user 1001 buildah-agent
+podman run -it -e AZP_TOKEN=${AZP_TOKEN} -e AZP_URL=${AZP_URL} --user 1001 buildah-agent
+```
+
+agent
+
+```sh
+podman build -t agent -f agent/Dockerfile
+podman run -it --entrypoint="/bin/bash" -e AZP_TOKEN=${AZP_TOKEN} -e AZP_URL=${AZP_URL} --user 1001 agent
+podman run -it -e AZP_TOKEN=${AZP_TOKEN} -e AZP_URL=${AZP_URL} --user 1001 agent
 ```
