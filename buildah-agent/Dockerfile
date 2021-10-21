@@ -24,6 +24,10 @@ RUN if [ "$TARGETARCH" = "amd64" ]; then \
     chmod -R g+rwX /azp && \
     chmod +x start.sh
 
+ADD dockerfile.sample /tmp/input/Dockerfile
+ADD build.sh /usr/bin
+RUN chmod a+x /usr/bin/build.sh
+
 USER 1001
 
 ENTRYPOINT [ "./start.sh" ]
