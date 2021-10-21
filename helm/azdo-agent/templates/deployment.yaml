@@ -29,43 +29,56 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
+          command:
+            - /bin/bash
+            - '-c'
+            - sleep 10000s
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          ports:
-            - name: http
-              containerPort: 80
-              protocol: TCP
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          readinessProbe:
-            exec:
-              command:
-              - /bin/bash
-              - -c
-              - if [[ $(/bin/ps -ef | /bin/grep "/bin/AgentService.js" | /bin/grep -v grep | /usr/bin/wc -l) -ge "1" ]]; then exit 0; else echo "/bin/AgentService.js not running" && exit 1; fi
-            initialDelaySeconds: 5
-            periodSeconds: 5
-          livenessProbe:
-            exec:
-              command:
-              - /bin/bash
-              - -c
-              - if [[ $(/bin/ps -ef | /bin/grep "/bin/AgentService.js" | /bin/grep -v grep | /usr/bin/wc -l) -ge "1" ]]; then exit 0; else echo "/bin/AgentService.js not running" && exit 1; fi
-            initialDelaySeconds: 5
-            periodSeconds: 5
-          startupProbe:
-            exec:
-              command:
-              - /bin/bash
-              - -c
-              - if [[ $(/bin/ps -ef | /bin/grep "/bin/AgentService.js" | /bin/grep -v grep | /usr/bin/wc -l) -ge "1" ]]; then exit 0; else echo "/bin/AgentService.js not running" && exit 1; fi
-            initialDelaySeconds: 5
-            periodSeconds: 5
+          # readinessProbe:
+          #   exec:
+          #     command:
+          #     - /bin/bash
+          #     - -c
+          #     - if [[ $(/bin/ps -ef | /bin/grep "/bin/AgentService.js" | /bin/grep -v grep | /usr/bin/wc -l) -ge "1" ]]; then exit 0; else echo "/bin/AgentService.js not running" && exit 1; fi
+          #   initialDelaySeconds: 5
+          #   periodSeconds: 5
+          # livenessProbe:
+          #   exec:
+          #     command:
+          #     - /bin/bash
+          #     - -c
+          #     - if [[ $(/bin/ps -ef | /bin/grep "/bin/AgentService.js" | /bin/grep -v grep | /usr/bin/wc -l) -ge "1" ]]; then exit 0; else echo "/bin/AgentService.js not running" && exit 1; fi
+          #   initialDelaySeconds: 5
+          #   periodSeconds: 5
+          # startupProbe:
+          #   exec:
+          #     command:
+          #     - /bin/bash
+          #     - -c
+          #     - if [[ $(/bin/ps -ef | /bin/grep "/bin/AgentService.js" | /bin/grep -v grep | /usr/bin/wc -l) -ge "1" ]]; then exit 0; else echo "/bin/AgentService.js not running" && exit 1; fi
+          #   initialDelaySeconds: 5
+          #   periodSeconds: 5
           envFrom:
             - secretRef:
                 name: azdevops
+          env: 
+            - name: OUTPUT_REGISTRY
+              value: image-registry.openshift-image-registry.svc:5000/azdo-agent
+            - name: OUTPUT_IMAGE
+              value: custom-image:latest
+          volumeMounts:
+            - name: push-secret
+              mountPath: /var/run/secrets/openshift.io/push
+              readOnly: true
+      volumes:
+        - name: push-secret
+          secret:
+            secretName: push-secret
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

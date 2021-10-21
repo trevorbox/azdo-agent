@@ -55,3 +55,7 @@ podman build -t agent -f agent/Dockerfile
 podman run -it --entrypoint="/bin/bash" -e AZP_TOKEN=${AZP_TOKEN} -e AZP_URL=${AZP_URL} --user 1001 agent
 podman run -it -e AZP_TOKEN=${AZP_TOKEN} -e AZP_URL=${AZP_URL} --user 1001 agent
 ```
+
+export OUTPUT_REGISTRY=image-registry.openshift-image-registry.svc:5000/azdo-agent
+export OUTPUT_IMAGE=custom-image:latest
+/usr/bin/build.sh
