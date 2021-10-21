@@ -30,6 +30,8 @@ helm upgrade -i secrets helm/secrets \
   --set azpdevops.pool=${AZP_POOL} \
   -n azdo-agent
 
+oc adm policy add-scc-to-user privileged -z azdo-agent -n azdo-agent
+
 helm upgrade -i azdo-agent helm/azdo-agent \
   --set image.repository=image-registry.openshift-image-registry.svc:5000/azdo-agent/azdo-agent \
   -n azdo-agent \
