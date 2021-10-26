@@ -56,6 +56,15 @@ This will run the the example buildah script baked into the image to test an ima
 oc exec deploy/azdo-agent -n azdo-agent -- bash -c "time /usr/bin/build.sh"
 ```
 
+example output of time to build...
+
+```sh
+...
+real    0m42.198s
+user    0m11.973s
+sys     0m5.343s
+```
+
 ## test improved performance from overlay cache
 
 See <https://developers.redhat.com/blog/2019/08/14/best-practices-for-running-buildah-in-a-container#running_buildah_inside_a_container>
@@ -64,15 +73,6 @@ Spin the pod down and back up again. The pvc should have the /var/lib/contianers
 
 ```sh
 oc rollout restart deploy/azdo-agent -n azdo-agent
-```
-
-example output of time to build...
-
-```sh
-...
-real    0m42.198s
-user    0m11.973s
-sys     0m5.343s
 ```
 
 After the pod is acaled up again, test the build to see faster time. Note: many pods using a RWO volume will wait to read/write and can cause unexpected behavior.
@@ -90,7 +90,7 @@ user    0m1.238s
 sys     0m2.467s
 ```
 
-This demonstrated a significant difference in time to build by using the cached image layers in storage pvc.
+This demonstrated a significant difference in time to build by using the cached image layers in storage pvc compared to the first run.
 
 # test local
 
