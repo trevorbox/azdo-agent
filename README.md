@@ -92,6 +92,12 @@ sys     0m2.467s
 
 This demonstrated a significant difference in time to build by using the cached image layers in storage pvc compared to the first run.
 
+# further improvements to buildah builds
+
+May be advantageous to cache dnf as well in a pvc.
+
+See <https://www.redhat.com/sysadmin/speeding-container-buildah>
+
 # test local
 
 buildah-agent
