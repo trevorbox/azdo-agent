@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dockerfile-sample
+data:
+  Dockerfile: |
+    FROM image-registry.openshift-image-registry.svc:5000/azdo-agent/ubi8-ubi:latest
+    RUN touch /tmp/build

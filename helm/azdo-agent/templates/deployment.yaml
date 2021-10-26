@@ -29,10 +29,10 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
-          # command:
-          #   - /bin/bash
-          #   - '-c'
-          #   - sleep 10000s
+          command:
+            - /bin/bash
+            - '-c'
+            - sleep 10000s
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -74,10 +74,30 @@ spec:
             - name: push-secret
               mountPath: /var/run/secrets/openshift.io/push
               readOnly: true
+            - name: build-script
+              mountPath: /usr/bin/build.sh
+              subPath: build.sh
+            - name: dockerfile-sample
+              mountPath: /tmp/input/Dockerfile
+              subPath: Dockerfile
+              # experimental for cached image storage from pvc
+            - name: containers-storage-overlay
+              mountPath: /var/lib/containers/storage
       volumes:
         - name: push-secret
           secret:
             secretName: push-secret
+        - name: build-script
+          configMap:
+            name: build-script
+            defaultMode: 0777
+        - name: dockerfile-sample
+          configMap:
+            name: dockerfile-sample
+        - name: containers-storage-overlay
+          persistentVolumeClaim:
+            # Name of the PVC created earlier
+            claimName: containers-storage-overlay
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
