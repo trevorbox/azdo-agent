@@ -1,5 +1,7 @@
 # ubi9 base image
 
+> <https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/docker?view=azure-devops#linux>
+
 ```sh
 export TAG="quay.io/trevorbox/azp-agent:ubi9" # replace with your tag
 
@@ -20,5 +22,5 @@ podman login quay.io
 podman push quay.io/trevorbox/azp-agent:ubi9
 podman run -it --rm -e AZP_URL="<Azure DevOps instance>" -e AZP_TOKEN="<Personal Access Token>" -e AZP_POOL="<Agent Pool Name>" -e AZP_AGENT_NAME="Docker Agent - Linux" --name "azp-agent-linux" quay.io/trevorbox/azp-agent:ubi9
 
-podman run --rm -it --entrypoint=sh quay.io/trevorbox/azp-agent:ubi9
+podman run --rm -it --entrypoint=/bin/bash -e AZP_URL="<Azure DevOps instance>" -e AZP_TOKEN="<Personal Access Token>" -e AZP_POOL="<Agent Pool Name>" -e AZP_AGENT_NAME="Docker Agent - Linux" --name "azp-agent-linux" quay.io/trevorbox/azp-agent:ubi9
 ```
