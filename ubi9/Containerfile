@@ -3,22 +3,7 @@ ARG base_image_digest
 
 FROM ${base_image_repository}@${base_image_digest}
 
-WORKDIR /azp
-
-COPY ./start.sh .
-
-RUN rpm --import https://packages.microsoft.com/keys/microsoft.asc && \
-    dnf install -y https://packages.microsoft.com/config/rhel/9.0/packages-microsoft-prod.rpm && \
-    dnf install -y azure-cli && \
-    dnf clean all && \
-    rm -rf /var/cache/dnf && \
-    chown -R 1001:0 /azp &&  \
-    chmod -R g+rwX /azp && \
-    chmod +x start.sh
-
-USER 1001
-
-ENTRYPOINT [ "./start.sh" ]
+ENV TARGETARCH="linux-x64"
 
 ARG base_image_digest
 ARG base_image_repository
@@ -51,3 +36,21 @@ LABEL org.opencontainers.image.title=azp-agent \
     org.opencontainers.image.authors=${author_emails} \    
     com.example.org.context.build-host=${build_host} \
     com.example.org.context.build-id=${build_id}
+
+WORKDIR /azp
+
+COPY ./start.sh .
+
+RUN rpm --import https://packages.microsoft.com/keys/microsoft.asc && \
+    dnf install -y https://packages.microsoft.com/config/rhel/9.0/packages-microsoft-prod.rpm && \
+    dnf install -y git jq libicu && \
+    dnf install -y azure-cli && \
+    dnf clean all && \
+    rm -rf /var/cache/dnf && \
+    chown -R 1001:0 /azp &&  \
+    chmod -R g+rwX /azp && \
+    chmod +x start.sh
+
+USER 1001
+
+ENTRYPOINT [ "./start.sh" ]
