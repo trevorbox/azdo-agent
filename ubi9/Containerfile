@@ -47,8 +47,8 @@ RUN rpm --import https://packages.microsoft.com/keys/microsoft.asc && \
     dnf install -y azure-cli && \
     dnf clean all && \
     rm -rf /var/cache/dnf && \
-    chown -R 1001:0 /azp &&  \
-    chmod -R g+rwX /azp && \
+    chown -R 1001:0 /azp && \
+    chmod -R g=u /azp && \
     chmod +x start.sh
 
 USER 1001

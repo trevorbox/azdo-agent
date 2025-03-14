@@ -20,7 +20,14 @@ podman build -t $TAG . \
 podman build -t quay.io/trevorbox/azp-agent:ubi9 .
 podman login quay.io
 podman push quay.io/trevorbox/azp-agent:ubi9
-podman run -it --rm -e AZP_URL="<Azure DevOps instance>" -e AZP_TOKEN="<Personal Access Token>" -e AZP_POOL="<Agent Pool Name>" -e AZP_AGENT_NAME="Docker Agent - Linux" --name "azp-agent-linux" quay.io/trevorbox/azp-agent:ubi9
+export AZP_URL=""
+export AZP_TOKEN=""
+export AZP_POOL=""
+podman run -it --rm -e AZP_URL="$AZP_URL" -e AZP_TOKEN="$AZP_TOKEN" -e AZP_POOL="$AZP_POOL" -e AZP_AGENT_NAME="Docker Agent - Linux" --name "azp-agent-linux" quay.io/trevorbox/azp-agent:ubi9
+podman run -it --rm --entrypoint=/bin/bash -e AZP_URL="$AZP_URL" -e AZP_TOKEN="$AZP_TOKEN" -e AZP_POOL="$AZP_POOL" -e AZP_AGENT_NAME="Docker Agent - Linux" --name "azp-agent-linux" quay.io/trevorbox/azp-agent:ubi9
+```
 
-podman run --rm -it --entrypoint=/bin/bash -e AZP_URL="<Azure DevOps instance>" -e AZP_TOKEN="<Personal Access Token>" -e AZP_POOL="<Agent Pool Name>" -e AZP_AGENT_NAME="Docker Agent - Linux" --name "azp-agent-linux" quay.io/trevorbox/azp-agent:ubi9
+```sh
+helm upgrade -i azp-agent-secret --create-namespace -n azp-agent ../helm/secrets --set azpdevops.url="$AZP_URL" --set azpdevops.token="$AZP_TOKEN" --set azpdevops.pool="$AZP_POOL"
+helm upgrade -i azp-agent --create-namespace -n azp-agent ../helm/azp-agent 
 ```
