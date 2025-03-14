@@ -52,15 +52,41 @@ spec:
                 secretKeyRef:
                   name: azdevops
                   key: AZP_POOL
-            - name: AZP_AGENT_NAME
+            - name: POD_NAME
               valueFrom:
-                secretKeyRef:
-                  name: azdevops
-                  key: AZP_AGENT_NAME
-          livenessProbe:
-            {{- toYaml .Values.livenessProbe | nindent 12 }}
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
+            - name: AZP_AGENT_NAME
+              value: $(NAMESPACE)-$(POD_NAME)
           readinessProbe:
-            {{- toYaml .Values.readinessProbe | nindent 12 }}
+            exec:
+              command:
+              - /bin/bash
+              - -c
+              - if [[ $(/bin/ps -ef | /bin/grep "/azp/bin/Agent.Listener" | /bin/grep -v grep | /usr/bin/wc -l) -ge "1" ]]; then exit 0; else echo "/azp/bin/Agent.Listener not running" && exit 1; fi
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe:
+            exec:
+              command:
+              - /bin/bash
+              - -c
+              - if [[ $(/bin/ps -ef | /bin/grep "/azp/bin/Agent.Listener" | /bin/grep -v grep | /usr/bin/wc -l) -ge "1" ]]; then exit 0; else echo "/azp/bin/Agent.Listener not running" && exit 1; fi
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          startupProbe:
+            exec:
+              command:
+              - /bin/bash
+              - -c
+              - if [[ $(/bin/ps -ef | /bin/grep "/azp/bin/Agent.Listener" | /bin/grep -v grep | /usr/bin/wc -l) -ge "1" ]]; then exit 0; else echo "/azp/bin/Agent.Listener not running" && exit 1; fi
+            initialDelaySeconds: 30
+            periodSeconds: 5
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           {{- with .Values.volumeMounts }}

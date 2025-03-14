@@ -43,11 +43,12 @@ COPY ./start.sh .
 
 RUN rpm --import https://packages.microsoft.com/keys/microsoft.asc && \
     dnf install -y https://packages.microsoft.com/config/rhel/9.0/packages-microsoft-prod.rpm && \
-    dnf install -y git jq libicu && \
+    dnf install -y git jq libicu procps && \
     dnf install -y azure-cli && \
     dnf clean all && \
-    rm -rf /var/cache/dnf && \
-    chown -R 1001:0 /azp && \
+    rm -rf /var/cache/dnf
+
+RUN chown -R 1001:0 /azp && \
     chmod -R g=u /azp && \
     chmod +x start.sh
 

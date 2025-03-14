@@ -74,7 +74,17 @@ fi
 
 print_header "2. Downloading and extracting Azure Pipelines agent..."
 
+mkdir /tmp/azp
+
+cd /tmp/azp
+
 curl -LsS "${AZP_AGENT_PACKAGE_LATEST_URL}" | tar -xz & wait $!
+
+mv /tmp/azp/* /azp
+
+rmdir /tmp/azp
+
+cd /azp
 
 source ./env.sh
 
