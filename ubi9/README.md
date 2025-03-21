@@ -3,7 +3,7 @@
 > <https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/docker?view=azure-devops#linux>
 
 ```sh
-export TAG="quay.io/trevorbox/azp-agent:ubi9" # replace with your tag
+export TAG="quay.io/trevorbox/azp-agent-ubi9:0.0.1" # replace with your tag
 
 podman build -t $TAG . \
   --build-arg git_origin_url=$(git config --get remote.origin.url) \
@@ -17,9 +17,9 @@ podman build -t $TAG . \
   --build-arg build_host=$(uname -n) \
   --build-arg build_id="1"
 
-podman build -t quay.io/trevorbox/azp-agent:ubi9 .
+
 podman login quay.io
-podman push quay.io/trevorbox/azp-agent:ubi9
+podman push $TAG
 export AZP_URL=""
 export AZP_TOKEN=""
 export AZP_POOL=""
