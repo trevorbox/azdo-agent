@@ -3,9 +3,15 @@
 > <https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/docker?view=azure-devops#linux>
 
 ```sh
-export TAG="quay.io/trevorbox/azp-agent-ubi9:0.0.1" # replace with your tag
+export TAG="quay.io/trevorbox/azp-agent-ubi9:1.0.1" # replace with your tag
+
+export AZP_URL=""
+export AZP_TOKEN=""
+export AZP_POOL=""
 
 podman build -t $TAG . \
+  --secret=id=azp_url,env=AZP_URL \
+  --secret=id=azp_token,env=AZP_TOKEN \
   --build-arg git_origin_url=$(git config --get remote.origin.url) \
   --build-arg git_revision=$(git rev-parse HEAD) \
   --build-arg base_image_digest=$(skopeo inspect --format "{{ .Digest }}" docker://registry.access.redhat.com/ubi9/ubi:latest) \
@@ -17,14 +23,13 @@ podman build -t $TAG . \
   --build-arg build_host=$(uname -n) \
   --build-arg build_id="1"
 
-
 podman login quay.io
 podman push $TAG
-export AZP_URL=""
-export AZP_TOKEN=""
-export AZP_POOL=""
-podman run -it --rm -e AZP_URL="$AZP_URL" -e AZP_TOKEN="$AZP_TOKEN" -e AZP_POOL="$AZP_POOL" -e AZP_AGENT_NAME="Docker Agent - Linux" --name "azp-agent-linux" quay.io/trevorbox/azp-agent:ubi9
-podman run -it --rm --entrypoint=/bin/bash -e AZP_URL="$AZP_URL" -e AZP_TOKEN="$AZP_TOKEN" -e AZP_POOL="$AZP_POOL" -e AZP_AGENT_NAME="Docker Agent - Linux" --name "azp-agent-linux" quay.io/trevorbox/azp-agent:ubi9
+
+podman run -it --rm -e AZP_URL="$AZP_URL" -e AZP_TOKEN="$AZP_TOKEN" -e AZP_POOL="$AZP_POOL" -e AZP_AGENT_NAME="Docker Agent - Linux" --name "azp-agent-linux" $TAG
+podman run -it --rm --entrypoint=/bin/bash -e AZP_URL="$AZP_URL" -e AZP_TOKEN="$AZP_TOKEN" -e AZP_POOL="$AZP_POOL" -e AZP_AGENT_NAME="Docker Agent - Linux" --name "azp-agent-linux" $TAG
+
+podman run -it --rm --entrypoint=/bin/bash --name "azp-agent-linux" $TAG
 ```
 
 ```sh

@@ -4,6 +4,8 @@ ARG base_image_digest
 FROM ${base_image_repository}@${base_image_digest}
 
 ENV TARGETARCH="linux-x64"
+# ENV AZP_URL=${AZP_URL}
+# ENV AZP_TOKEN=${AZP_TOKEN}
 
 ARG base_image_digest
 ARG base_image_repository
@@ -39,6 +41,8 @@ LABEL org.opencontainers.image.title=azp-agent \
 
 WORKDIR /azp
 
+COPY ./download.sh .
+
 COPY ./start.sh .
 
 RUN rpm --import https://packages.microsoft.com/keys/microsoft.asc && \
@@ -48,7 +52,12 @@ RUN rpm --import https://packages.microsoft.com/keys/microsoft.asc && \
     dnf clean all && \
     rm -rf /var/cache/dnf
 
-RUN chown -R 1001:0 /azp && \
+RUN --mount=type=secret,id=azp_url && \
+    --mount=type=secret,id=azp_token && \
+    chmod +x download.sh && \
+    ./download.sh && \
+    rm download.sh && \
+    chown -R 1001:0 /azp && \
     chmod -R g=u /azp && \
     chmod +x start.sh
 
