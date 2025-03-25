@@ -1,0 +1,61 @@
+---
+apiVersion: networking.istio.io/v1beta1
+kind: ServiceEntry
+metadata:
+  name: dev-azure-com
+  namespace: azp-agent
+spec:
+  hosts:
+    - dev.azure.com
+  location: MESH_EXTERNAL
+  ports:
+    - name: https
+      number: 443
+      protocol: HTTPS
+  resolution: DNS
+---
+apiVersion: networking.istio.io/v1beta1
+kind: ServiceEntry
+metadata:
+  name: azdo-expressroute-connections
+  namespace: azp-agent
+spec:
+  hosts:
+    - azdo-expressroute-connections
+  addresses:
+    - 13.107.6.175/32
+    - 13.107.6.176/32
+    - 13.107.6.183/32
+    - 13.107.9.175/32
+    - 13.107.9.176/32
+    - 13.107.9.183/32
+    - 13.107.42.18/32
+    - 13.107.42.19/32
+    - 13.107.42.20/32
+    - 13.107.43.18/32
+    - 13.107.43.19/32
+    - 13.107.43.20/32
+    - 150.171.73.14/32
+    - 150.171.73.15/32
+    - 150.171.73.16/32
+    - 150.171.74.14/32
+    - 150.171.74.15/32
+    - 150.171.74.16/32
+    - 150.171.75.14/32
+    - 150.171.75.15/32
+    - 150.171.75.16/32
+    - 150.171.76.14/32
+    - 150.171.76.15/32
+    - 150.171.76.16/32
+    - 150.171.22.17/32
+    - 150.171.22.18/32
+    - 150.171.22.19/32
+    - 150.171.23.17/32
+    - 150.171.23.18/32
+    - 150.171.23.19/32
+  location: MESH_EXTERNAL
+  ports:
+    - name: https
+      number: 443
+      protocol: HTTPS
+  resolution: NONE
