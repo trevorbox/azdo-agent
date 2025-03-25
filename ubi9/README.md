@@ -3,11 +3,11 @@
 > <https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/docker?view=azure-devops#linux>
 
 ```sh
-export TAG="quay.io/trevorbox/azp-agent-ubi9:1.0.1" # replace with your tag
-
 export AZP_URL=""
 export AZP_TOKEN=""
 export AZP_POOL=""
+
+export TAG="quay.io/trevorbox/azp-agent-ubi9:1.0.1" # replace with your tag
 
 podman build -t $TAG . \
   --secret=id=azp_url,env=AZP_URL \
