@@ -1,0 +1,9 @@
+FROM quay.io/trevorbox/azp-agent-ubi9:1.0.1
+
+USER 0
+
+RUN curl -LsS https://github.com/open-policy-agent/gatekeeper/releases/download/v3.18.2/gator-v3.18.2-linux-amd64.tar.gz | tar -xz & wait $! && \
+    chmod a+rx gator && \
+    mv gator /usr/local/bin
+
+USER 1001

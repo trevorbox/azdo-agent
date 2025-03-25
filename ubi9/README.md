@@ -32,6 +32,15 @@ podman run -it --rm --entrypoint=/bin/bash -e AZP_URL="$AZP_URL" -e AZP_TOKEN="$
 podman run -it --rm --entrypoint=/bin/bash --name "azp-agent-linux" $TAG
 ```
 
+## Gator
+
+```sh
+export TAG="quay.io/trevorbox/azp-agent-ubi9-gator:0.0.1"
+podman build -f Containerfile-gator -t $TAG
+```
+
+## Deploy
+
 ```sh
 helm upgrade -i azp-agent-secret --create-namespace -n azp-agent ../helm/secrets --set azpdevops.url="$AZP_URL" --set azpdevops.token="$AZP_TOKEN" --set azpdevops.pool="$AZP_POOL"
 helm upgrade -i azp-agent --create-namespace -n azp-agent ../helm/azp-agent 
