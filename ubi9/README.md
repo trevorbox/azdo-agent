@@ -42,6 +42,18 @@ podman build -f Containerfile-gator -t $TAG
 ## Deploy
 
 ```sh
-helm upgrade -i azp-agent-secret --create-namespace -n azp-agent ../helm/secrets --set azpdevops.url="$AZP_URL" --set azpdevops.token="$AZP_TOKEN" --set azpdevops.pool="$AZP_POOL"
+export AZP_URL=""
+export AZP_TOKEN=""
+export AZP_POOL=""
+export VSTS_HTTP_PROXY=""
+export VSTS_HTTP_NO_PROXY=""
+export VSTS_HTTP_PROXY_USERNAME=""
+export VSTS_HTTP_PROXY_PASSWORD=""
+
+helm upgrade -i azp-agent-secret --create-namespace -n azp-agent ../helm/secrets --set azpdevops.url="$AZP_URL" --set azpdevops.token="$AZP_TOKEN" --set azpdevops.pool="$AZP_POOL" \
+--set azpdevops.proxy="$AZP_POOL" \
+--set azpdevops.no_proxy="$AZP_POOL" \
+--set azpdevops.proxy_username="$AZP_POOL" \
+--set azpdevops.proxy_password="$AZP_POOL" \
 helm upgrade -i azp-agent --create-namespace -n azp-agent ../helm/azp-agent 
 ```

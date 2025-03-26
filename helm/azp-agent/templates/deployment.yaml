@@ -36,7 +36,39 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["/bin/bash"]
+          args:
+            - -c
+            - >-
+                echo ${VSTS_HTTP_PROXY} > /azp/.proxy &&
+                echo ${VSTS_HTTP_NO_PROXY} > /azp/.proxybypass &&
+                ./start.sh
           env:
+
+            - name: VSTS_HTTP_PROXY_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: azdevops
+                  key: VSTS_HTTP_PROXY_USERNAME
+
+            - name: VSTS_HTTP_PROXY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: azdevops
+                  key: VSTS_HTTP_PROXY_PASSWORD
+
+            - name: VSTS_HTTP_PROXY
+              valueFrom:
+                secretKeyRef:
+                  name: azdevops
+                  key: VSTS_HTTP_PROXY
+
+            - name: VSTS_HTTP_NO_PROXY
+              valueFrom:
+                secretKeyRef:
+                  name: azdevops
+                  key: VSTS_HTTP_NO_PROXY
+
             - name: AZP_URL
               valueFrom:
                 secretKeyRef:
