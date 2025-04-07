@@ -34,6 +34,7 @@ serviceAccount:
 # This is for setting Kubernetes Annotations to a Pod.
 # For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/ 
 podAnnotations:
+  sidecar.istio.io/inject: 'true'
   proxy.istio.io/config: |
     holdApplicationUntilProxyStarts: true
     terminationDrainDuration: 90s
@@ -41,7 +42,7 @@ podAnnotations:
 # This is for setting Kubernetes Labels to a Pod.
 # For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
 podLabels: 
- sidecar.istio.io/inject: 'true'
+  sidecar.istio.io/inject: 'true'
 
 podSecurityContext: {}
   # fsGroup: 2000
