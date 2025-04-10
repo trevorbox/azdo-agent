@@ -1,6 +1,20 @@
 ARG base_image_repository
 ARG base_image_digest
 
+FROM ${base_image_repository}@${base_image_digest} as builder
+
+WORKDIR /tmp
+
+RUN dnf install binutils gcc make openssl-devel openssl perl -y
+RUN curl -LsS https://github.com/curl/curl/releases/download/curl-8_13_0/curl-8.13.0.tar.gz| tar -xz
+RUN cd curl-8.13.0 && ./configure --prefix=/opt/curl/ --with-openssl --without-libpsl && make && make install
+RUN curl -LsS https://github.com/open-policy-agent/gatekeeper/releases/download/v3.18.2/gator-v3.18.2-linux-amd64.tar.gz | tar -xz & wait $! && \
+    chmod a+rx gator
+RUN /opt/curl/bin/curl --version
+
+ARG base_image_repository
+ARG base_image_digest
+
 FROM ${base_image_repository}@${base_image_digest}
 
 ENV TARGETARCH="linux-x64"
@@ -38,6 +52,13 @@ LABEL org.opencontainers.image.title=azp-agent \
     org.opencontainers.image.authors=${author_emails} \    
     com.example.org.context.build-host=${build_host} \
     com.example.org.context.build-id=${build_id}
+
+# https://access.redhat.com/discussions/a43b51f2-737a-4684-a7df-a1dec1dd66b6
+
+COPY --from=builder /opt/curl /opt/curl
+COPY --from=builder /tmp/gator /usr/local/bin/gator
+
+RUN ln -s /opt/curl/bin/curl /usr/local/bin/curl
 
 WORKDIR /azp
 
